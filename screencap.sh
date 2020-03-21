@@ -73,6 +73,14 @@ done
 clear
 echo
 echo
+echo "Which x,y pixel would you like the script to begin capturing?
+(ie. 0,0 would be the upper-left corner; 600,0 would be the uppermost
+and right 600 pixels. If you aren't sure, just use 0,0 and make sure
+to use a comma between the two numbers.)"
+read BEGIN_RES
+clear
+echo
+echo
 echo "What is your desktop's resolution? (ie. 1200x720, 1920x1080, etc.)"
 read VIDEO_RES
 clear
@@ -123,5 +131,5 @@ read -n 1 -s -r -p "Press any key to start the capture..."
 while :
 do
 	yuv4mpeg_to_v4l2 $VIDEO_DEV < /tmp/pipe &
-	ffmpeg -f x11grab -r $FPS -s $VIDEO_RES -i :0.0+0,0 -vcodec rawvideo -pix_fmt "yuv"$PIPE_RES"p" -threads 0 -f avi - | mplayer - -vf scale=$SCALE -vo yuv4mpeg:file=/tmp/pipe
+	ffmpeg -f x11grab -r $FPS -s $VIDEO_RES -i ":0.0+"$BEGIN_RES -vcodec rawvideo -pix_fmt "yuv"$PIPE_RES"p" -threads 0 -f avi - | mplayer - -vf scale=$SCALE -vo yuv4mpeg:file=/tmp/pipe
 done
